@@ -72,9 +72,9 @@ describe 'Bill' do
 
       detail = bill.body['FeCAEReq']['FeDetReq']['FECAEDetRequest'].first
 
-      expect(detail['FchServDesde']).to eq "20210419"
-      expect(detail['FchServHasta']).to eq "20210419"
-      expect(detail['FchVtoPago']).to   eq "20210419"
+      expect(detail['FchServDesde']).to eq "20210420"
+      expect(detail['FchServHasta']).to eq "20210420"
+      expect(detail['FchVtoPago']).to   eq "20210420"
     end
 
     context 'credit/debit notes' do

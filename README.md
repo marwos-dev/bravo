@@ -1,5 +1,5 @@
 # Bravo
-![Travis status](https://travis-ci.org/xguz/bravo.png)
+![Tests](https://github.com/PlumLabs/bravo/actions/workflows/ruby.yml/badge.svg)
 
  Por ahora idéntica a leanucci/bravo, solo he modificado el ejemplo de este Readme, que fallaba debido a que faltaba el campo document_number / DocNro.
 
