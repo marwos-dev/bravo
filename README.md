@@ -1,5 +1,5 @@
 # Bravo
-![Travis status](https://travis-ci.org/xguz/bravo.png)
+![Tests](https://github.com/PlumLabs/bravo/actions/workflows/ruby.yml/badge.svg)
 
  Por ahora idéntica a leanucci/bravo, solo he modificado el ejemplo de este Readme, que fallaba debido a que faltaba el campo document_number / DocNro.
 
@@ -110,6 +110,50 @@ invoice = Bravo::Bill::Invoice.new(total: 100.0,
                                    iva_type: :iva_21)
 # Agregamos DNI o CUIT
 invoice.document_number = '36025649'
+
+# Agregamos este Invoice al Bill
+bill_b.set_new_invoice(invoice)
+
+# Enviamos la solicitud a la AFIP
+bill_b.authorize
+
+puts "Authorization result = #{ bill_b.authorized? }"
+puts "Authorization response."
+puts bill_b.response
+
+```
+
+* Comprobante: Credit Note
+* Tipo: 'B'
+* A: consumidor final
+* Total: $ 100
+
+
+Código de ejemplo para la configuración anterior:
+
+```ruby
+
+puts "Let's issue a Credit Note for 100 ARS to a Consumidor Final"
+
+# Creamos un Bill de tipo CreditNote B
+bill_b = Bravo::Bill.new(bill_type: :bill_b,
+                         invoice_type: :credit)
+
+invoice = Bravo::Bill::Invoice.new(total: 100.0,
+                                   document_type: 'DNI',
+                                   iva_condition: :consumidor_final,
+                                   iva_type: :iva_21)
+# Agregamos DNI o CUIT
+invoice.document_number = '36025649'
+
+# Asociamos la Nota de Credito con alguna/s Factura/s (* New AFIP requirement)
+invoice.cbte_asocs = [
+  {
+    type: '01',         # 01 Invoice
+    sale_point: '0004',
+    number: '00000052', # Numero de factura asociada
+  }
+]
 
 # Agregamos este Invoice al Bill
 bill_b.set_new_invoice(invoice)

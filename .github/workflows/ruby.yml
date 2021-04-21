@@ -1,0 +1,27 @@
+name: Ruby
+on: [push, pull_request]
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-18.04]
+        # Due to https://github.com/actions/runner/issues/849, we have to use quotes for '3.0'
+        ruby: [2.2]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Run tests
+        env:
+          GH_ACTIONS: true
+          CERT: ${{ secrets.CERT }}
+          PKEY: ${{ secrets.PKEY }}
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/spec/fixtures/certs
+          echo "$CERT" > $GITHUB_WORKSPACE/spec/fixtures/certs/cert.crt
+          echo "$PKEY" > $GITHUB_WORKSPACE/spec/fixtures/certs/pkey
+          bundle exec rake
