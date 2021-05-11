@@ -61,6 +61,9 @@ describe 'Bill' do
   describe '#setup_bill' do
     it 'uses today dates as default', vcr: { cassette_name: 'setup_bill_given_date' } do
       bill = Bravo::Bill.new(bill_type: :bill_a, invoice_type: :invoice)
+
+      allow(bill).to receive(:today).and_return("20210420")
+
       invoice = Bravo::Bill::Invoice.new(total: 100.0,
                                          document_type: 'CUIT',
                                          iva_condition: :responsable_inscripto,
