@@ -99,7 +99,6 @@ YML
     # def data_filename
     #   @_data_filename ||= "#{Dir.tmpdir}/eafip_#{ @company.cuit }_#{ Time.new.strftime('%Y_%m_%d') }.yml"
     # end
-
   
     def self.response_login_errors(response)
       raise "No se obtuvo respuesta al realizar el Login" if response.blank?
