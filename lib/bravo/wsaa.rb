@@ -79,6 +79,7 @@ XML
         curl -k -s -H 'Content-Type: application/soap+xml; action=""' -d @- #{ Bravo::AuthData.wsaa_url }`
 
       response = CGI::unescapeHTML(response)
+      response_login_errors(response)
       token = response.scan(%r{\<token\>(.+)\<\/token\>}).first.first
       sign  = response.scan(%r{\<sign\>(.+)\<\/sign\>}).first.first
       [token, sign]
@@ -93,6 +94,16 @@ sign: #{certs[1]}
 expire_at: #{Time.new + TA_EXPIRATION_TIME}
 YML
       `echo '#{ yml }' > /tmp/bravo_#{ Bravo.cuit }_#{ Time.new.strftime('%Y_%m_%d') }.yml`
+    end
+
+    def response_login_errors(response)
+      raise "No se obtuvo respuesta al realizar el Login" if response.blank?
+      cms_error = response.scan(%r{\<faultstring\>(.+)\<\/faultstring\>})
+      raise cms_error.first.first if cms_error.present?
+      token_response = response.scan(%r{\<token\>(.+)\<\/token\>})
+      raise "Error obteniendo el Token" if token_response.length != 1
+      sign_response = response.scan(%r{\<sign\>(.+)\<\/sign\>})
+      raise "Error obteniendo Sign" if sign_response.length != 1
     end
 
   end
